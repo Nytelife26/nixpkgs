@@ -77,6 +77,7 @@ let
         cupsSupport
         pulseSupport
         variant
+        helium-linux
         ;
       gnChromium = buildPackages.gn.override upstream-info.deps.gn;
     };
@@ -92,11 +93,24 @@ let
     # patched into their shebangs.
     ungoogled-chromium = pkgsBuildBuild.callPackage ./variants/ungoogled { };
 
+    # Helium-linux provides Linux-specific patches applied during build.
+    helium-linux =
+      if variant == "helium" then
+        pkgs.fetchFromGitHub {
+          owner = "imputnet";
+          repo = "helium-linux";
+          inherit (upstream-info.deps.helium-linux) rev hash;
+        }
+      else
+        null;
+
     # so is helium.
     helium = pkgsBuildBuild.callPackage ./variants/helium { };
   };
 
   sandboxExecutableName = chromium.browser.passthru.sandboxExecutableName;
+
+  browserName = if variant == "helium" then "helium" else "chromium";
 
   # We want users to be able to enableWideVine without rebuilding all of
   # chromium, so we have a separate derivation here that copies chromium
@@ -109,8 +123,8 @@ let
       runCommand (browser.name + "-wv") { version = browser.version; } ''
         mkdir -p $out
         cp -a ${browser}/* $out/
-        chmod u+w $out/libexec/chromium
-        cp -a ${widevine-cdm}/share/google/chrome/WidevineCdm $out/libexec/chromium/
+        chmod u+w $out/libexec/${browserName}
+        cp -a ${widevine-cdm}/share/google/chrome/WidevineCdm $out/libexec/${browserName}/
       ''
     else
       browser;
@@ -146,7 +160,7 @@ stdenv.mkDerivation {
 
   buildCommand =
     let
-      browserBinary = "${chromiumWV}/libexec/chromium/chromium";
+      browserBinary = "${chromiumWV}/libexec/${browserName}/${browserName}";
       libPath = lib.makeLibraryPath [
         libva
         pipewire
@@ -155,8 +169,7 @@ stdenv.mkDerivation {
         gtk4
         libkrb5
       ];
-      browserName = if variant == "helium" then "helium" else "chromium";
-      defaultDataDir = if browserName == "helium" then "net.imput.helium" else browserName;
+      defaultDataDir = if variant == "helium" then "net.imput.helium" else browserName;
     in
     ''
       mkdir -p "$out/bin"

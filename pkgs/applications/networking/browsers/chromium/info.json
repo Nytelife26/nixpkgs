@@ -1655,7 +1655,7 @@
     }
   },
   "helium": {
-    "version": "148.0.7778.178",
+    "version": "148.0.7778.215",
     "deps": {
       "depot_tools": {
         "rev": "41c40cfaec7ee3bf0423c59925d8b23982a601f1",
@@ -1667,10 +1667,14 @@
         "hash": "sha256-BTPD8WM1pVAMkFDlHekMdWFGyf63KdhKkKwsqikqoBQ="
       },
       "ungoogled-patches": {
-        "rev": "0.12.4",
-        "hash": "sha256-zlxk1qnYu3pMpJhFEdOS8MaHbufKg4BwuJnfdU/D6Fs="
+        "rev": "0.12.5",
+        "hash": "sha256-B+DUPq3/k3p5seZ4EWs6NbLv9KzhU/b9+7/UfrrTLsc="
       },
-      "npmHash": "sha256-JuVcY8iFRDWcPcP4Pg+qm5rnTXkiVfNsqSkXbDWqsE8="
+      "npmHash": "sha256-JuVcY8iFRDWcPcP4Pg+qm5rnTXkiVfNsqSkXbDWqsE8=",
+      "helium-linux": {
+        "rev": "256961597d342124d27ae592a5572e07735609af",
+        "hash": "sha256-lAtXWytB8JSRPnfXGcEHN3SwZqQo2w9YrGVvSKH6oLA="
+      }
     },
     "DEPS": {
       "src": {
